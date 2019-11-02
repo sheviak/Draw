@@ -1,0 +1,91 @@
+﻿<Window x:Class="Draw.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:ii="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:local="clr-namespace:Draw"
+        xmlns:viewmodel="clr-namespace:Draw.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="900"
+        FontSize="16">
+    
+    <Window.DataContext>
+        <viewmodel:MainWindowViewModel />
+    </Window.DataContext>
+    
+    <Window.Resources>
+        <Style x:Key="textblock" TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignHeadlineTextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="10 5 0 5" />
+        </Style>
+        <Style x:Key="button" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedDarkButton}">
+            <Setter Property="Margin" Value="20 0" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="15" />
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition MinHeight="350" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="330" />
+            <ColumnDefinition />
+            <ColumnDefinition MinWidth="330" />
+        </Grid.ColumnDefinitions>
+        
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Поле" Style="{StaticResource textblock}" />
+        <Border Grid.Column="1" Grid.RowSpan="4" BorderBrush="Gray" BorderThickness="1" Margin="0 -1 0 -1" />
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="Функции" Style="{StaticResource textblock}" />
+        <TextBlock Grid.Row="1" Grid.Column="2" Text="Изображение" Style="{StaticResource textblock}" />
+
+        <materialDesign:Card Grid.Row="2" Grid.Column="0" materialDesign:ShadowAssist.ShadowDepth="Depth2" 
+                             Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Canvas Name="canvas" Background="White" 
+                Width="300" Height="300"
+                ClipToBounds="True"
+                VerticalAlignment="Center" HorizontalAlignment="Center"
+                MouseLeftButtonDown="DrawingMouseDown" 
+                MouseLeftButtonUp="DrawingMouseUp" 
+                MouseMove="DrawingMouseMove">
+            </Canvas>
+        </materialDesign:Card>
+
+        <materialDesign:Card Grid.Row="2" Grid.Column="2" materialDesign:ShadowAssist.ShadowDepth="Depth2" 
+                             Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Image Source="{Binding BitmapSource}" Width="300" Height="300"></Image>
+        </materialDesign:Card>
+
+        <Button Content="Очистить" Grid.Column="0" Grid.Row="3" Style="{StaticResource button}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction Command="{Binding ClearCommand}" CommandParameter="{Binding ElementName=canvas}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        
+        <Button Grid.Column="1" Grid.Row="3" Content="Создать" Style="{StaticResource button}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction Command="{Binding CreateCommand}" CommandParameter="{Binding ElementName=canvas}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+
+        <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3">
+            <Button Content="Сохранить PNG" Style="{StaticResource button}" Command="{Binding SavePngCommand}" />
+            <Button Content="Сохранить CSV" Style="{StaticResource button}" Command="{Binding SaveCsvCommand}" />
+        </StackPanel>
+
+        <TextBox Text="{Binding CSVtext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="0" />
+        <Button Grid.Column="1" Grid.Row="0" Command="{Binding LoadCommand}" Content="LoadCommand" />
+    </Grid>
+</Window>

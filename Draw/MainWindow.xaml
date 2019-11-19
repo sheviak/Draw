@@ -7,9 +7,10 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:ii="http://schemas.microsoft.com/expression/2010/interactivity" 
         xmlns:local="clr-namespace:Draw"
+        xmlns:controls="clr-namespace:Draw.UserControls"
         xmlns:viewmodel="clr-namespace:Draw.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="900"
+        Title="MainWindow" Height="500" Width="1000"
         FontSize="16">
     
     <Window.DataContext>
@@ -21,8 +22,13 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="10 5 0 5" />
         </Style>
+        <Style x:Key="textblockFunck" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
         <Style x:Key="button" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedDarkButton}">
-            <Setter Property="Margin" Value="20 0" />
+            <Setter Property="Margin" Value="10 0" />
             <Setter Property="Height" Value="40" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="15" />
@@ -32,8 +38,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
-            <RowDefinition Height="50" />
-            <RowDefinition MinHeight="350" />
+            <RowDefinition Height="40" />
+            <RowDefinition MinHeight="320" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -43,15 +49,13 @@
         </Grid.ColumnDefinitions>
         
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Поле" Style="{StaticResource textblock}" />
-        <Border Grid.Column="1" Grid.RowSpan="4" BorderBrush="Gray" BorderThickness="1" Margin="0 -1 0 -1" />
         <TextBlock Grid.Row="1" Grid.Column="1" Text="Функции" Style="{StaticResource textblock}" />
         <TextBlock Grid.Row="1" Grid.Column="2" Text="Изображение" Style="{StaticResource textblock}" />
-
+        
         <materialDesign:Card Grid.Row="2" Grid.Column="0" materialDesign:ShadowAssist.ShadowDepth="Depth2" 
                              Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Canvas Name="canvas" Background="White" 
+            <Canvas Name="canvas" Background="White"
                 Width="300" Height="300"
-                ClipToBounds="True"
                 VerticalAlignment="Center" HorizontalAlignment="Center"
                 MouseLeftButtonDown="DrawingMouseDown" 
                 MouseLeftButtonUp="DrawingMouseUp" 
@@ -59,11 +63,47 @@
             </Canvas>
         </materialDesign:Card>
 
+        <controls:Functions x:Name="mSNC" Grid.Row="2" Grid.Column="1"></controls:Functions>
+       <!--
+        <materialDesign:Card Grid.Row="2" Grid.Column="1" materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                             Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3.5*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Цифра" Style="{StaticResource textblockFunck}" />
+                <TextBlock Grid.Row="1" Text="Угол поворота" Style="{StaticResource textblockFunck}" />
+                <TextBlock Grid.Row="2" Text="Сдвиг по оси Х (px)" Style="{StaticResource textblockFunck}" />
+                <TextBlock Grid.Row="3" Text="Сдвиг по оси У (px)" Style="{StaticResource textblockFunck}" />
+                <TextBlock Grid.Row="4" Text="Масштабирование по оси Х" Style="{StaticResource textblockFunck}" />
+                <TextBlock Grid.Row="5" Text="Масштабирование по оси У" Style="{StaticResource textblockFunck}" />
+
+                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding NumberList}" SelectedIndex="{Binding Number}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Rotate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ShiftX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ShiftY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ScaleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding ScaleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            </Grid>    
+        </materialDesign:Card>
+-->
         <materialDesign:Card Grid.Row="2" Grid.Column="2" materialDesign:ShadowAssist.ShadowDepth="Depth2" 
                              Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Image Source="{Binding BitmapSource}" Width="300" Height="300"></Image>
         </materialDesign:Card>
-
+        
         <Button Content="Очистить" Grid.Column="0" Grid.Row="3" Style="{StaticResource button}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
@@ -71,21 +111,21 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
-        
-        <Button Grid.Column="1" Grid.Row="3" Content="Создать" Style="{StaticResource button}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <i:InvokeCommandAction Command="{Binding CreateCommand}" CommandParameter="{Binding ElementName=canvas}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
+
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center">
+            <Button Content="Загрузит CSV" Command="{Binding LoadCommand}" Style="{StaticResource button}" />
+            <Button Content="Создать" Style="{StaticResource button}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding CreateCommand}" CommandParameter="{Binding ElementName=canvas}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
+        </StackPanel>
 
         <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="3">
             <Button Content="Сохранить PNG" Style="{StaticResource button}" Command="{Binding SavePngCommand}" />
             <Button Content="Сохранить CSV" Style="{StaticResource button}" Command="{Binding SaveCsvCommand}" />
         </StackPanel>
-
-        <TextBox Text="{Binding CSVtext, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="0" />
-        <Button Grid.Column="1" Grid.Row="0" Command="{Binding LoadCommand}" Content="LoadCommand" />
     </Grid>
 </Window>

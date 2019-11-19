@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Draw.Entities
+﻿namespace Draw.Entities
 {
     public class Number
     {
-
+        public string Num { get; set; }
+        public string Value { get; set; }
     }
 }

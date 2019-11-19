@@ -1,30 +1,17 @@
 ﻿using System.Windows.Controls;
 using Draw.Command;
-using System.Windows.Forms;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
-using System.Drawing;
-using System.IO;
-using System.Text;
 using System.Windows.Media.Imaging;
+using Draw.ImageProcessing;
+using Draw.Extensions;
+using System.Collections.Generic;
 
 namespace Draw.ViewModel
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private const int SIZE = 28;
-        private ImageConverters.ImageConverter imageConverters;
-
-        private Bitmap _bitmap;
-        public Bitmap Bitmap
-        {
-            get { return this._bitmap; }
-            set
-            {
-                this._bitmap = value;
-                OnPropertyChanged("Bitmap");
-            }
-        }
 
         private BitmapSource _bitmapSource;
         public BitmapSource BitmapSource
@@ -37,7 +24,7 @@ namespace Draw.ViewModel
             }
         }
 
-        private string _aboutNumber = "1, поворот на 45 градусов, сдвиг по оси Х";
+        private string _aboutNumber;
         public string AboutNumber
         {
             get { return _aboutNumber; }
@@ -48,96 +35,127 @@ namespace Draw.ViewModel
             }
         }
 
+        private int _rotate;
+        public int Rotate
+        {
+            get { return _rotate; }
+            set
+            {
+                _rotate = value;
+                OnPropertyChanged("Rotate");
+            }
+        }
+
+        private int _shiftX;
+        public int ShiftX
+        {
+            get { return _shiftX; }
+            set
+            {
+                _shiftX = value;
+                OnPropertyChanged("ShiftX");
+            }
+        }
+
+        private int _shiftY;
+        public int ShiftY
+        {
+            get { return _shiftY; }
+            set
+            {
+                _shiftY = value;
+                OnPropertyChanged("ShiftY");
+            }
+        }
+
+        private double _scaleY = 1;
+        public double ScaleY
+        {
+            get { return _scaleY; }
+            set
+            {
+                _scaleY = value;
+                OnPropertyChanged("ScaleY");
+            }
+        }
+
+        private double _scaleX = 1;
+        public double ScaleX
+        {
+            get { return _scaleX; }
+            set
+            {
+                _scaleX = value;
+                OnPropertyChanged("ScaleX");
+            }
+        }
+
+        private int _number = -1;
+        public int Number
+        {
+            get { return _number; }
+            set
+            {
+                _number = value;
+                OnPropertyChanged("Number");
+            }
+        }
+
+        public List<int> NumberList { get; set; } = new List<int>();
+
+        private StorageProcessor storage = new StorageProcessor();
+
         public DelegateCommand<Canvas> ClearCommand { get; set; }
         public DelegateCommand<Canvas> CreateCommand { get; set; }
-        public ICommand SavePngCommand => new RelayCommand(() => SaveImage(Bitmap));
-        public ICommand SaveCsvCommand => new RelayCommand(() => SaveCSV(Bitmap));
-        public ICommand LoadCommand => new RelayCommand(() => LoadFromCsv());
+        public ICommand SavePngCommand => new RelayCommand(() => storage.SaveImage(BitmapSource, AboutNumber));
+        public ICommand SaveCsvCommand => new RelayCommand(() => storage.SaveCsv(BitmapSource, AboutNumber, SIZE));
+        public ICommand LoadCommand => new RelayCommand(() =>
+        {
+            var temp = storage.LoadFromCsv(SIZE);
+            BitmapSource = temp.Item1;
+            AboutNumber = temp.Item2;
+        });
 
         public MainWindowViewModel()
         {
-            imageConverters = new ImageConverters.ImageConverter();
-
             ClearCommand = new DelegateCommand<Canvas>(canvas => ClearFields((Canvas)canvas));
-            CreateCommand = new DelegateCommand<Canvas>(canvas =>
-            {
-                Bitmap = imageConverters.CreateImage((Canvas) canvas, SIZE);
-                //BitmapSource t = (BitmapSource) System.Drawing.BitmapSource.FromFile(@" C:\Users\Kyrylo_Sheviak\Desktop\9.png", true);
-                BitmapSource = imageConverters.BitmapToBitmapSource(Bitmap);
-            });
+            CreateCommand = new DelegateCommand<Canvas>(canvas => CreateImage((Canvas)canvas));
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            for (int i = 0; i <= 9; i++)
+                NumberList.Add(i);
+            //TODO: сделать выпадающий список на масштабирование и сдвиги
+            // сделать правльное соотношение или порядок выполнения функций
+
+        }
+
+        private void CreateImage(Canvas canvas)
+        {
+            //TODO: доделать поворот - сделать более красивый код
+            canvas.ChangeCanvas(45);
+            canvas.UpdateLayout();
+            var img = canvas
+                .CreateImage()
+                .ConvertToBlackWhite()
+                .ScaleImage(SIZE, SIZE)
+                .BitmapToBitmapSource()
+                //.RotateImageTransform(Rotate)
+                .ScaleImageTransform(ScaleX, ScaleY)
+                .TranslateImageTransform(ShiftX, ShiftY);
+
+            BitmapSource = img;
         }
 
         private void ClearFields(Canvas canvas)
         {
-            ((Canvas) canvas).Children.Clear();
+            canvas.Children.Clear();
             BitmapSource = null;
-        }
-
-        private void LoadFromCsv()
-        {
-            var openDialog = new OpenFileDialog
-            {
-                FileName = "Открыть файл", Filter = "CSV reader|* .csv"
-            };
-
-            if (openDialog.ShowDialog() != DialogResult.OK) return;
-
-            using (var reader = new StreamReader(openDialog.FileName))
-            {
-                int index = 0;
-                string line = "";
-                while (!reader.EndOfStream)
-                {
-                    if (index == 0)
-                        AboutNumber = reader.ReadLine();
-                    if (index == 1)
-                        line = reader.ReadLine();
-                    index++;
-                }
-                var temp = imageConverters.CSVtoBitmap(line, SIZE);
-                BitmapSource = imageConverters.BitmapToBitmapSource(temp);
-            }
-        }
-
-        private void SaveCSV(Bitmap image)
-        {
-            var sbOutput = new StringBuilder();
-            var strFilePath = @"testfile.csv";
-            var strSeperator = ",";
-            sbOutput.AppendLine(AboutNumber);
-            for (var i = 0; i < SIZE; i++)
-            {
-                for (var j = 0; j < SIZE; j++)
-                {
-                    var pixel = image.GetPixel(i, j);
-                    var lum = (int)imageConverters.GetLuminance(pixel.R, pixel.G, pixel.B);
-                    sbOutput.AppendFormat(string.Concat(lum, (i == SIZE-1 && j == SIZE-1) ? "" : strSeperator));
-                }
-            }
-            // Create and write the csv file
-            File.WriteAllText(strFilePath, sbOutput.ToString(), Encoding.UTF8);
-        }
-
-        private void SaveImage(Bitmap image)
-        {
-            var savedialog = new SaveFileDialog
-            {
-                Title = "Сохранить файла",
-                Filter = "Graphics Redactor|* .png",
-                FileName = AboutNumber
-            };
-
-            if (savedialog.ShowDialog() != DialogResult.OK) return;
-
-            var mass = new MemoryStream();
-            var files = new FileStream(savedialog.FileName, FileMode.Create, FileAccess.ReadWrite);
-            image.Save(mass, System.Drawing.Imaging.ImageFormat.Png);
-
-            byte[] matric = mass.ToArray();
-            files.Write(matric, 0, matric.Length);
-
-            mass.Close();
-            files.Close();
+            Rotate = ShiftX = ShiftY = 0;
+            AboutNumber = "";
         }
     }
 }

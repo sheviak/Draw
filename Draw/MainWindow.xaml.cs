@@ -1,8 +1,6 @@
-﻿using System.IO;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Draw
 {
@@ -26,7 +24,7 @@ namespace Draw
             StartFigure(e.GetPosition(canvas));
         }
 
-        void DrawingMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        void DrawingMouseMove(object sender, MouseEventArgs e)
         {
             if (!isDrawing)
                 return;
@@ -41,20 +39,20 @@ namespace Draw
             Mouse.Capture(null);
         }
 
-        void StartFigure(System.Windows.Point start)
+        void StartFigure(Point start)
         {
             currentFigure = new PathFigure() { StartPoint = start };
             var currentPath =
                 new System.Windows.Shapes.Path()
                 {
-                    Stroke = System.Windows.Media.Brushes.Red,
-                    StrokeThickness = 8,
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 10,
                     Data = new PathGeometry() { Figures = { currentFigure } }
                 };
             canvas.Children.Add(currentPath);
         }
 
-        void AddFigurePoint(System.Windows.Point point)
+        void AddFigurePoint(Point point)
         {
             currentFigure.Segments.Add(new LineSegment(point, isStroked: true));
         }
@@ -63,27 +61,5 @@ namespace Draw
         {
             currentFigure = null;
         }
-
-        // Стоковое изображение
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Forms.SaveFileDialog save = new System.Windows.Forms.SaveFileDialog();
-            save.Filter = "Graphics Redactor|* .png";
-            save.Title = "Сохранение файла";
-            save.ShowDialog();
-
-            var rtb = new RenderTargetBitmap((int)canvas.Width, (int)canvas.Height, 96d, 96d, PixelFormats.Pbgra32);
-            // needed otherwise the image output is black
-            canvas.Measure(new System.Windows.Size((int)canvas.Width, (int)canvas.Height));
-            canvas.Arrange(new Rect(new System.Windows.Size((int)canvas.Width, (int)canvas.Height)));
-            rtb.Render(canvas);
-
-            PngBitmapEncoder BufferSave = new PngBitmapEncoder();
-            BufferSave.Frames.Add((BitmapFrame.Create(rtb)));
-            using (var fs = File.OpenWrite(save.FileName))
-            {
-                BufferSave.Save(fs);
-            }
-        }       
     }
 }

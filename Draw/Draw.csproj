@@ -89,10 +89,23 @@
     </ApplicationDefinition>
     <Compile Include="Command\DelegateCommand.cs" />
     <Compile Include="Entities\Number.cs" />
-    <Compile Include="ImageConverters\ImageConverter.cs" />
-    <Compile Include="ImageConverters\ImageEditor.cs" />
+    <Compile Include="Extensions\CreateImageExtension.cs" />
+    <Compile Include="Extensions\TransformExtension.cs" />
+    <Compile Include="GenerateNumbers.xaml.cs">
+      <DependentUpon>GenerateNumbers.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ImageProcessing\StorageProcessor.cs" />
     <Compile Include="Interfaces\IDelegateCommand.cs" />
+    <Compile Include="CustomConverter.cs" />
+    <Compile Include="UserControls\Functions.xaml.cs">
+      <DependentUpon>Functions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\GenerateNumbersViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Page Include="GenerateNumbers.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -105,6 +118,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UserControls\Functions.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
@@ -134,6 +151,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Windows\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

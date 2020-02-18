@@ -117,40 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="btnClearCanvas" xml:space="preserve">
-    <value>Отчистить поля</value>
+  <data name="Target" xml:space="preserve">
+    <value>H4sIAAAAAAAEAN1ZS2/jNhC+F+h/IHRqgazlJJduYO8idZLC6OaBKFkkp4CRxg6xFKWSVNZG0V/WQ39S/0KHelmi/JDsbDYo9rKhZr55D4fjf//+Z/BxFnLyDFKxSAyd/V7fISD8KGBiOnQSPXn3i/Pxw48/DE6DcEY+F3SHhg45hRo6T1rHR66r/CcIqeqFzJeRiia650ehS4PIPej337v7+y4ghINYhAyuE6FZCOkf+OcoEj7EOqH8PAqAq/wcv3gpKrmgIaiY+jB0TiT92juOY+TRMNMOOeaMohoe8IlDqBCRphqVPLpV4GkZiakX4wHlN/MYkG5CuYJc+aMFeVs7+gfGDnfBWED5idJR2BFw/zB3jGuzb+Vep3Qcuu4UXaznxurUfUPnIgkfQTrEFnU04tKQ5b5N+RioXka/R8zpXhl7TBHzb4+MEq4TCUMBiZaU75Gr5JEz/3eY30RfQAxFwnlVIVQJv9UO8OhKRjFIPb+GSa7mOHCIW+dzbcaSrcKTmTAW+vDAIRconD5yKONdMdfTkYTfQICkGoIrqjVIYTAg9VhDuiUL3VIIw/zCOnHIOZ19AjHVT0MH/+uQMzaDoDjJFbgVDMsKmbRMYJOMz5QbopeWckGf2TR1QtOm/AQD75Br4CmVemJxVll5MjxYhGcyCq8jXiZX/fuDFyXSN3ZEa4huqJyCrus6cBfZuymnq/p0SO0F2/8kw9dn1LXxCOyG4T2xib57AYz7HTF8yqHEOIkwKrAdyN2uIF/g664OQYgd/ZGVVecMWdcN0ovipdpAUeFr20DRK9q0gWOlIp+lutVUtvSqm3sqAtKmV2U9d2EsNl7sAyzGykdVcEZy7Aq/FCfAQQM59rObf0SVT4Omx9GcoJNSpedqSlVdb+tmi8SuA9JcbJTjxKSwjzGhmy2KCZ/FlLdwkMXbssEZ40sp9pcTiEGY27eFK7YXX0qxYrLJQwO3km7Ny8jMocgBMheOoylGIyUuR9TGtYSzaX4zqfyqttPCQHuga+mN4V7Ug5Wj7kaAatYsg6l+t9AqDrB1sltBhXRdy7Cj07I4S7MqLmlEumVN1bHWWO/WzV/Sn8ocWDxc3OzlUrxw3BVPnME5jWOc7ipPnvyEeNl7Z/TO6/4WCDMM11dLngSltqUkHIjpFKyvKBo1PWNS6ROq6SM1V8goCBtkSzJ+RTIWAutJ3YxfkZwFvfl/xmO9/or0b3aFnPUMDQtNZ0mH/kb6NBnTNyflVC6Zv0YRT0Kxuses5k7fDFX29KA9f/4eqCLkR02MgWvZ3uiEDQc3bql6vNpGc219d4rpaqR2oV3H/20iXMzXVYTirD1KMWFXUYqzjij3S1DuO6HkU3YNJT/riGJblJ91QMnm7BpIdtQNwzYnO+pUx/mkbRVzfvrK1di4f2ySUnp5D1n3zSDv/Zv3bo3LICNxCLromQXmIvDmSkPYMwQ97w8+4gztXRCcU8EmoHT2eHYO+vsH1vbu7WzSXKUCvuU6bYxT5mzo/En+ev3lADMO37jg6v6+LPDFM5X+E5U/hXT2cxWo81arA9KLbYO+e2RWa2TIj8j47mEc7JFLieVyRPqo5257nlToTluerRHud0KobXgmPKJbYtztiFHd72xlSHW7sw2AvdvZjPFNlybfdT9Sre22G5F+r/eiS5FX2n+sHYDf2Maj+Uxss8xYs8vIJouhEzxGGOgs0Vc893dddKwQ9aZ2IUvWHpu2Hk0XvNaeozlPYr5Vfu3FZFdsuoAwv/0K8GuZVtKMxSQqkt3SqCCx2uU5aBpgGh6jiRPqa/zsg1Lp72fp+DF0TtGBwVhcJjpONJoM4SOv/ehnCmed/HSZU9d5cBmni/KXMAHVZGgCXIpfE8aDUu+zJa1+BYSpyHz+M7HUZg6czkuki0i0BMrdVzaSGwhjjmDqUnj0GbbR7VbBJ5hSf148C1aDbA5E3e2DE0ankoYqx1jw45+Yw0E4+/AfhLJjMPQgAAA=</value>
   </data>
-  <data name="btnGenerate" xml:space="preserve">
-    <value>Генерировать</value>
-  </data>
-  <data name="btnLoadScenario" xml:space="preserve">
-    <value>Загрузить сценарий</value>
-  </data>
-  <data name="btnSaveScenario" xml:space="preserve">
-    <value>Сохранить сценарий</value>
-  </data>
-  <data name="num" xml:space="preserve">
-    <value>Цифра</value>
-  </data>
-  <data name="rotate" xml:space="preserve">
-    <value>Угол поворота</value>
-  </data>
-  <data name="scaleX" xml:space="preserve">
-    <value>Масштабирование по оси Х</value>
-  </data>
-  <data name="scaleY" xml:space="preserve">
-    <value>Масштабирование по оси Y</value>
-  </data>
-  <data name="shiftX" xml:space="preserve">
-    <value>Сдвиг по оси Х (px)</value>
-  </data>
-  <data name="shiftY" xml:space="preserve">
-    <value>Сдвиг по оси Y (px)</value>
-  </data>
-  <data name="skewX" xml:space="preserve">
-    <value>Наклон элемента по оси Х</value>
-  </data>
-  <data name="skewY" xml:space="preserve">
-    <value>Наклон элемента по оси Y</value>
+  <data name="DefaultSchema" xml:space="preserve">
+    <value>dbo</value>
   </data>
 </root>

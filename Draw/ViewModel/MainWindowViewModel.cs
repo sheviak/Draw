@@ -4,14 +4,22 @@ using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using System.Windows.Media.Imaging;
 using Draw.ImageProcessing;
-using Draw.Extensions;
 using System.Collections.Generic;
+using System.Linq;
+using Draw.Service;
+using Draw.AppContext;
+using Draw.Entities;
+using System;
+using System.Diagnostics;
 
 namespace Draw.ViewModel
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private const int SIZE = 28;
+        private const string link = "https://mssg.me/sheviak.k";
+        private const string strFilePath = @"temp/single-number.csv";
+        private SingletonContext context = SingletonContext.GetInstance;
 
         private BitmapSource _bitmapSource;
         public BitmapSource BitmapSource
@@ -20,7 +28,7 @@ namespace Draw.ViewModel
             set
             {
                 this._bitmapSource = value;
-                OnPropertyChanged("BitmapSource");
+                OnPropertyChanged();
             }
         }
 
@@ -31,40 +39,40 @@ namespace Draw.ViewModel
             set
             {
                 _aboutNumber = value;
-                OnPropertyChanged("AboutNumber");
+                OnPropertyChanged();
             }
         }
 
-        private int _rotate;
+        private int _rotate = 0;
         public int Rotate
         {
             get { return _rotate; }
             set
             {
                 _rotate = value;
-                OnPropertyChanged("Rotate");
+                OnPropertyChanged();
             }
         }
 
-        private int _shiftX;
+        private int _shiftX = 0;
         public int ShiftX
         {
             get { return _shiftX; }
             set
             {
                 _shiftX = value;
-                OnPropertyChanged("ShiftX");
+                OnPropertyChanged();
             }
         }
 
-        private int _shiftY;
+        private int _shiftY = 0;
         public int ShiftY
         {
             get { return _shiftY; }
             set
             {
                 _shiftY = value;
-                OnPropertyChanged("ShiftY");
+                OnPropertyChanged();
             }
         }
 
@@ -75,7 +83,7 @@ namespace Draw.ViewModel
             set
             {
                 _scaleY = value;
-                OnPropertyChanged("ScaleY");
+                OnPropertyChanged();
             }
         }
 
@@ -86,29 +94,90 @@ namespace Draw.ViewModel
             set
             {
                 _scaleX = value;
-                OnPropertyChanged("ScaleX");
+                OnPropertyChanged();
             }
         }
 
-        private int _number = -1;
-        public int Number
+        private int _skewX = 0;
+        public int SkewX
         {
-            get { return _number; }
+            get { return _skewX; }
             set
             {
-                _number = value;
-                OnPropertyChanged("Number");
+                _skewX = value;
+                OnPropertyChanged();
             }
         }
 
-        public List<int> NumberList { get; set; } = new List<int>();
+        private int _skewY = 0;
+        public int SkewY
+        {
+            get { return _skewY; }
+            set
+            {
+                _skewY = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _selectedNumber = -1;
+        public int SelectedNumber
+        {
+            get { return _selectedNumber; }
+            set
+            {
+                _selectedNumber = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public List<int> NumberList { get; set; } = Enumerable.Range(0, 10).ToList();
 
         private StorageProcessor storage = new StorageProcessor();
 
+        public MainWindowViewModel()
+        {
+            ClearCommand = new DelegateCommand<Canvas>(canvas => ClearFields((Canvas)canvas));
+            CreateCommand = new DelegateCommand<Canvas>(canvas => CreateImage((Canvas)canvas));
+        }
+       
         public DelegateCommand<Canvas> ClearCommand { get; set; }
         public DelegateCommand<Canvas> CreateCommand { get; set; }
-        public ICommand SavePngCommand => new RelayCommand(() => storage.SaveImage(BitmapSource, AboutNumber));
-        public ICommand SaveCsvCommand => new RelayCommand(() => storage.SaveCsv(BitmapSource, AboutNumber, SIZE));
+
+        public ICommand SaveDbCommand => new RelayCommand(() =>
+        {
+            if (BitmapSource == null) return;
+
+            var number = SelectedNumber.ToString();
+            var line = storage.ConvertToCsv(BitmapSource, number, SIZE);
+
+            var model = new Number
+            {
+                Num = number,
+                Value = line,
+                NumProperties = new NumProperties
+                {
+                    Rotate = this.Rotate,
+                    ScaleX = this.ScaleX,
+                    ScaleY = this.ScaleY,
+                    ShiftX = this.ShiftX,
+                    ShiftY = this.ShiftY,
+                    SkewX = this.SkewX,
+                    SkewY = this.SkewY
+                }
+            };
+
+            SingletonContext.Context.Numbers.Add(model);
+            SingletonContext.Context.SaveChanges();
+        });
+
+        public ICommand SavePngCommand => new RelayCommand(() => storage.SaveImage(BitmapSource, SelectedNumber.ToString()));
+        public ICommand SaveCsvCommand => new RelayCommand(() =>
+        {
+            var str = storage.ConvertToCsv(BitmapSource, SelectedNumber.ToString(), SIZE);
+            storage.SaveToCsvFile(strFilePath, str);
+        });
+
         public ICommand LoadCommand => new RelayCommand(() =>
         {
             var temp = storage.LoadFromCsv(SIZE);
@@ -116,36 +185,36 @@ namespace Draw.ViewModel
             AboutNumber = temp.Item2;
         });
 
-        public MainWindowViewModel()
+        public ICommand GenerateWindow => new RelayCommand(() =>
         {
-            ClearCommand = new DelegateCommand<Canvas>(canvas => ClearFields((Canvas)canvas));
-            CreateCommand = new DelegateCommand<Canvas>(canvas => CreateImage((Canvas)canvas));
+            var generate = new GenerateNumbers();
+            generate.ShowDialog();
+        });
 
-            Initialize();
-        }
-
-        private void Initialize()
+        public ICommand CloseProgram => new RelayCommand(() =>
         {
-            for (int i = 0; i <= 9; i++)
-                NumberList.Add(i);
-            //TODO: сделать выпадающий список на масштабирование и сдвиги
-            // сделать правльное соотношение или порядок выполнения функций
+            Environment.Exit(0);
+        });
 
-        }
+        public ICommand OpenWebSite => new RelayCommand(() => Process.Start(link));
 
         private void CreateImage(Canvas canvas)
         {
-            //TODO: доделать поворот - сделать более красивый код
-            canvas.ChangeCanvas(45);
-            canvas.UpdateLayout();
-            var img = canvas
-                .CreateImage()
-                .ConvertToBlackWhite()
-                .ScaleImage(SIZE, SIZE)
-                .BitmapToBitmapSource()
-                //.RotateImageTransform(Rotate)
-                .ScaleImageTransform(ScaleX, ScaleY)
-                .TranslateImageTransform(ShiftX, ShiftY);
+            var service = new NumberService();
+            var img = service
+                .GetBitmapNumber(
+                    canvas: canvas,
+                    canvasWidth: (int)canvas.Width,
+                    canvasHeight: (int)canvas.Height,
+                    sizeImg: SIZE,
+                    rotate: Rotate,
+                    scaleX: ScaleX,
+                    scaleY: ScaleY,
+                    shiftX: ShiftX,
+                    shiftY: ShiftY,
+                    skewX: SkewX,
+                    skewY: SkewY
+                );
 
             BitmapSource = img;
         }
@@ -153,6 +222,7 @@ namespace Draw.ViewModel
         private void ClearFields(Canvas canvas)
         {
             canvas.Children.Clear();
+            SelectedNumber = -1;
             BitmapSource = null;
             Rotate = ShiftX = ShiftY = 0;
             AboutNumber = "";

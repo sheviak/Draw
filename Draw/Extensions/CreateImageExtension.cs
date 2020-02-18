@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Draw.ImageProcessing;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -11,28 +12,14 @@ namespace Draw.Extensions
 {
     public static class CreateImageExtension
     {
-        public static Canvas ChangeCanvas(this Canvas canvas, int rotate)
-        {
-            RotateTransform rotation = new RotateTransform();
-            rotation.Angle += rotate;
-            rotation.CenterX = canvas.Width / 2;
-            rotation.CenterY = canvas.Height / 2;
-            for (int i = 0; i < canvas.Children.Count; i++)
-            {
-                canvas.Children[i].RenderTransform = rotation;
-            }
-             
-            return canvas;
-        }
-
         /// <summary>
         /// Создаем изображение из Canvas в Bitmap
         /// </summary>
-        /// <param name="canvas">поле Canvas</param>
+        /// <param name="canvas">Поле Canvas</param>
         /// <returns></returns>
         public static Bitmap CreateImage(this Canvas canvas)
         {
-            RenderTargetBitmap rtb = new RenderTargetBitmap((int)canvas.RenderSize.Width, (int)canvas.RenderSize.Height, 96d, 96d, PixelFormats.Pbgra32);
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)canvas.Width, (int)canvas.Height, 96d, 96d, PixelFormats.Pbgra32);
             canvas.Measure(new System.Windows.Size((int)canvas.Width, (int)canvas.Height));
             canvas.Arrange(new Rect(new System.Windows.Size((int)canvas.Width, (int)canvas.Height)));
             rtb.Render(canvas);
@@ -50,13 +37,19 @@ namespace Draw.Extensions
             return (Bitmap)ImgOut; 
         }
 
-        // изменяем размер изображения
+        /// <summary>
+        /// Изменяем размер изображения
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="width">ширина в px</param>
+        /// <param name="height">высота в px</param>
+        /// <returns></returns>
         public static Bitmap ScaleImage(this Bitmap source, int width, int height)
         {
             Bitmap dest = new Bitmap(width, height);
             using (Graphics gr = Graphics.FromImage(dest))
             {
-                gr.FillRectangle(System.Drawing.Brushes.White, 0, 0, width, height);  // Очищаем экран
+                gr.FillRectangle(System.Drawing.Brushes.Black, 0, 0, width, height);  // Очищаем экран
                 gr.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
                 float srcwidth = source.Width;
@@ -89,39 +82,69 @@ namespace Draw.Extensions
             }
         }
 
-        // преобразуем в Ч/Б
+        /// <summary>
+        /// Инвертирует изображение в цвета изображение из БД MNIST (в ч/б)
+        /// </summary>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public static BitmapSource ConvertToColorMnist(this BitmapSource image)
+        {
+            var img = image.GetBitmap();
+            Bitmap output = new Bitmap(img.Width, img.Height);
+
+            for (int j = 0; j < img.Height; j++)
+            {
+                for (int i = 0; i < img.Width; i++)
+                {
+                    // получаем (i, j) пиксель
+                    var pixel = img.GetPixel(i, j);
+                    output.SetPixel(i, j, PixelConvert.Invert(pixel));
+                }
+            }
+            return output.BitmapToBitmapSource();
+        }
+
+        /// <summary>
+        /// Преобразование изображения в цвета Ч/Б
+        /// </summary>
+        /// <param name="img">source</param>
+        /// <returns></returns>
         public static Bitmap ConvertToBlackWhite(this Bitmap img)
         {
-            // создаём BitmapSource из изображения, находящегося в pictureBox1
+            // создаём BitmapSource из изображения, переданного в параметре
             Bitmap input = new Bitmap(img);
             // создаём BitmapSource для черно-белого изображения
             Bitmap output = new Bitmap(input.Width, input.Height);
             // перебираем в циклах все пиксели исходного изображения
             for (int j = 0; j < input.Height; j++)
+            {
                 for (int i = 0; i < input.Width; i++)
                 {
                     // получаем (i, j) пиксель
-                    UInt32 pixel = (UInt32)(input.GetPixel(i, j).ToArgb());
+                    UInt32 oldPixel = (UInt32)(input.GetPixel(i, j).ToArgb());
                     // получаем компоненты цветов пикселя
-                    float R = (float)((pixel & 0x00FF0000) >> 16); // красный
-                    float G = (float)((pixel & 0x0000FF00) >> 8); // зеленый
-                    float B = (float)(pixel & 0x000000FF); // синий
+                    float R = (float)((oldPixel & 0x00FF0000) >> 16); // красный
+                    float G = (float)((oldPixel & 0x0000FF00) >> 8); // зеленый
+                    float B = (float)(oldPixel & 0x000000FF); // синий
                                                            // делаем цвет черно-белым (оттенки серого) - находим среднее арифметическое
                     R = G = B = (R + G + B) / 3.0f;
                     // собираем новый пиксель по частям (по каналам)
                     UInt32 newPixel = 0xFF000000 | ((UInt32)R << 16) | ((UInt32)G << 8) | ((UInt32)B);
                     // добавляем его в BitmapSource нового изображения
-                    output.SetPixel(i, j, System.Drawing.Color.FromArgb((int)newPixel));
+                    var pixel = System.Drawing.Color.FromArgb((int)newPixel);
+                    pixel = PixelConvert.Invert(pixel);
+                    output.SetPixel(i, j, pixel);
                 }
+            }
             // выводим черно-белый BitmapSource в pictureBox2
             return output;
         }
 
-        public static System.Drawing.Color Invert(System.Drawing.Color c)
-        {
-            return System.Drawing.Color.FromArgb(c.A, 0xFF - c.R, 0xFF - c.G, 0xFF - c.B);
-        }
-
+        /// <summary>
+        /// Конвертация BitmapSource -> Bitmap
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static Bitmap GetBitmap(this BitmapSource source)
         {
             Bitmap bmp = new Bitmap(source.PixelWidth, source.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
@@ -131,6 +154,11 @@ namespace Draw.Extensions
             return bmp;
         }
 
+        /// <summary>
+        /// Конвертация Bitmap -> BitmapSource
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         public static BitmapSource BitmapToBitmapSource(this Bitmap source)
         {
             return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(

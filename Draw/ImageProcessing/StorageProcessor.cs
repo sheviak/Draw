@@ -5,12 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
+using Draw.Entities;
 using Draw.Extensions;
+using Newtonsoft.Json;
 
 namespace Draw.ImageProcessing
 {
     public class StorageProcessor
     {
+        /// <summary>
+        /// Конвертирвание строки CSV в изображение Bitmap
+        /// </summary>
+        /// <param name="csv">CSV строка</param>
+        /// <param name="size">Размер изображения</param>
+        /// <returns></returns>
         public Bitmap CSVtoBitmap(string csv, int size)
         {
             var split = csv.Split(',');
@@ -31,6 +39,11 @@ namespace Draw.ImageProcessing
             return imgBitmap;
         }
 
+        /// <summary>
+        /// Считывание 1й строки CSV из файла
+        /// </summary>
+        /// <param name="size">Размер изображения</param>
+        /// <returns></returns>
         public (BitmapSource, string) LoadFromCsv(int size)
         {
             var openDialog = new OpenFileDialog
@@ -43,27 +56,25 @@ namespace Draw.ImageProcessing
 
             using (var reader = new StreamReader(openDialog.FileName))
             {
-                int index = 0;
-                string line = "", aboutNumber = "";
-                while (!reader.EndOfStream)
-                {
-                    if (index == 0)
-                        aboutNumber = reader.ReadLine();
-                    if (index == 1)
-                        line = reader.ReadLine();
-                    index++;
-                }
-                var temp = CSVtoBitmap(line, size).BitmapToBitmapSource();
-                return (temp, aboutNumber);
+                var line = reader.ReadLine();
+                var temp = CSVtoBitmap(line.Remove(0, 2), size).BitmapToBitmapSource();
+                return (temp, line.Remove(1));
             }
         }
 
-        public void SaveCsv(BitmapSource image, string aboutNumber, int size)
+        /// <summary>
+        /// Конвертирвоание изображения BitmapSource в CSV строку
+        /// </summary>
+        /// <param name="image">Изображение</param>
+        /// <param name="number">Цифра</param>
+        /// <param name="size">Размер в px</param>
+        /// <returns></returns>
+        public string ConvertToCsv(BitmapSource image, string number, int size)
         {
             var sbOutput = new StringBuilder();
-            var strFilePath = @"testfile.csv";
             var strSeperator = ",";
-            sbOutput.AppendLine(aboutNumber);
+            sbOutput.AppendFormat(number+strSeperator);
+
             var img = image.GetBitmap();
             for (var i = 0; i < size; i++)
             {
@@ -71,61 +82,92 @@ namespace Draw.ImageProcessing
                 {
                     // i j change место
                     var pixel = img.GetPixel(j, i);
-                    var lum = (int)GetLuminance(pixel.R, pixel.G, pixel.B);
+                    //pixel = PixelConvert.Invert(pixel); // инвертируем в нужную картинку для БД MNIST
+                    var lum = (int)PixelConvert.GetLuminance(pixel.R, pixel.G, pixel.B);
                     sbOutput.AppendFormat(string.Concat(lum, (i == size - 1 && j == size - 1) ? "" : strSeperator));
                 }
             }
-            // Create and write the csv file
-            File.WriteAllText(strFilePath, sbOutput.ToString(), Encoding.UTF8);
-        }
 
-        public void SaveImage(BitmapSource image, string aboutNumber)
-        {
-            var savedialog = new SaveFileDialog
-            {
-                Title = "Сохранить файла",
-                Filter = "Graphics Redactor|* .png",
-                FileName = aboutNumber
-            };
-
-            if (savedialog.ShowDialog() != DialogResult.OK) return;
-
-            /*
-            var im = image.GetBitmap();
-            Bitmap output = new Bitmap(im.Width, im.Height);
-
-            for (int j = 0; j < im.Height; j++)
-            {
-                for (int i = 0; i < im.Width; i++)
-                {
-                    // получаем (i, j) пиксель
-                    var pixel = im.GetPixel(i, j);
-                    output.SetPixel(i, j, CreateImageExtension.invert(pixel));
-                }
-            }
-            */
-            var img = image.GetBitmap();
-            var mass = new MemoryStream();
-            var files = new FileStream(savedialog.FileName, FileMode.Create, FileAccess.ReadWrite);
-            img.Save(mass, System.Drawing.Imaging.ImageFormat.Png);
-
-            byte[] matric = mass.ToArray();
-            files.Write(matric, 0, matric.Length);
-
-            mass.Close();
-            files.Close();
+            return sbOutput.ToString();
         }
 
         /// <summary>
-        /// Конвертирование пикселей в Luminance
+        /// Сохранение в CSV файл
         /// </summary>
-        /// <param name="r"></param>
-        /// <param name="g"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public double GetLuminance(byte r, byte g, byte b)
+        /// <param name="strFilePath">Путь к файлу</param>
+        /// <param name="line">Строка CSV</param>
+        public void SaveToCsvFile(string strFilePath, string line)
         {
-            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            // File.WriteAllText(strFilePath, sbOutput.ToString(), Encoding.UTF8);
+            using (StreamWriter sw = new StreamWriter(strFilePath, true, Encoding.UTF8))
+            {
+                sw.WriteLine(line);
+            }
+        }
+
+        /// <summary>
+        /// Сохранение изображения
+        /// </summary>
+        /// <param name="image">Изображение</param>
+        /// <param name="nameNumber">Цифра</param>
+        /// <param name="path">Путь сохранения</param>
+        public async void SaveImage(BitmapSource image, string nameNumber, string path = "temp")
+        {
+            var img = image.GetBitmap();
+            var mass = new MemoryStream();
+            using (var files = new FileStream(string.Concat(path, "//", nameNumber, ".png"), FileMode.Create, FileAccess.ReadWrite))
+            {
+                img.Save(mass, System.Drawing.Imaging.ImageFormat.Png);
+
+                byte[] matric = mass.ToArray();
+                await files.WriteAsync(matric, 0, matric.Length);
+
+                mass.Close();
+                files.Close();
+            }
+        }
+
+        /// <summary>
+        /// Загрузка сценария
+        /// </summary>
+        /// <returns></returns>
+        public SettingsScenario LoadScenario()
+        {
+            var openDialog = new OpenFileDialog
+            {
+                FileName = "Открыть сценарий",
+                Filter = "JSON data|* .json",
+                InitialDirectory = Application.StartupPath + "\\temp\\scenario"
+            };
+
+            if (openDialog.ShowDialog() != DialogResult.OK) return new SettingsScenario();
+
+            string json = File.ReadAllText(openDialog.FileName);
+            return JsonConvert.DeserializeObject<SettingsScenario>(json);
+        }
+
+        /// <summary>
+        /// Сохранение сценария
+        /// </summary>
+        /// <param name="scenario">Объект типа SettingsScenario</param>
+        public void SaveScenario(SettingsScenario scenario)
+        {
+            var saveDialog = new SaveFileDialog
+            {
+                Filter = "JSON data|* .json",
+                InitialDirectory = Application.StartupPath + "\\temp\\scenario"
+            };
+
+            if (saveDialog.ShowDialog() != DialogResult.OK) return;
+
+            JsonSerializer serializer = new JsonSerializer();
+            using (StreamWriter sw = new StreamWriter(saveDialog.FileName))
+            {
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(writer, scenario);
+                }
+            }
         }
     }
 }

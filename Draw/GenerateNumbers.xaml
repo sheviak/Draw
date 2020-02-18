@@ -8,8 +8,10 @@
         xmlns:viewmodel="clr-namespace:Draw.ViewModel"
         xmlns:controls="clr-namespace:Draw.UserControls"
         xmlns:local="clr-namespace:Draw"
-        mc:Ignorable="d"
-        Title="GenerateNumbers" Height="980" Width="1220">
+        mc:Ignorable="d" FontSize="16"
+        WindowStartupLocation="CenterOwner"
+        xmlns:res="clr-namespace:Draw.Properties"
+        Title="Sheviak | Digit generator" Height="980" Width="1400">
     
     <Window.DataContext>
         <viewmodel:GenerateNumbersViewModel />
@@ -38,164 +40,206 @@
             <Setter Property="Width" Value="25" />
             <Setter Property="Margin" Value="0 5 0 0" />
         </Style>
+        <Style x:Key="textHeader" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="textItem" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="10 0" />
+        </Style>
+        <Style x:Key="textDigit" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="ico" TargetType="materialDesign:PackIcon">
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Margin" Value="10 0 0 0" />
+        </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" />
-            <ColumnDefinition Width="300" />
-            <ColumnDefinition Width="300" />
-            <ColumnDefinition Width="300" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition  />
-            <RowDefinition  />
-            <RowDefinition  />
-        </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas1"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Number1CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-        
-        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas2"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric2CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        <StackPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas3"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric3CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        <StackPanel Grid.Row="0" Grid.Column="3" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas4"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric4CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas5"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric5CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas6"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric6CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        <StackPanel Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas7"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric7CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        <StackPanel Grid.Row="1" Grid.Column="3" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas8"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric8CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        <StackPanel Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas9"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric9CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        <StackPanel Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
-            <materialDesign:Card Style="{StaticResource card}">
-                <Canvas Style="{StaticResource canvas}" Name="canvas0"
-                    MouseLeftButtonDown="DrawingMouseDown" 
-                    MouseLeftButtonUp="DrawingMouseUp" 
-                    MouseMove="DrawingMouseMove">
-                </Canvas>
-            </materialDesign:Card>
-            <materialDesign:PackIcon Kind="Numeric0CircleOutline" Style="{StaticResource num}"  />
-        </StackPanel>
-
-        
-        <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2">
-            <materialDesign:Card Height="280" Width="580" materialDesign:ShadowAssist.ShadowDepth="Depth2">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition  />
-                        <RowDefinition  />
-                        <RowDefinition  />
-                    </Grid.RowDefinitions>
-                    <Button Command="{Binding Test}" Content="Генерировать">
-                        <Button.CommandParameter>
-                            <MultiBinding Converter="{StaticResource customConverter}">
-                                <Binding ElementName="canvas1" />
-                                <Binding ElementName="canvas2" />
-                                <Binding ElementName="canvas3" />
-                                <Binding ElementName="canvas4" />
-                                <Binding ElementName="canvas5" />
-                                <Binding ElementName="canvas6" />
-                                <Binding ElementName="canvas7" />
-                                <Binding ElementName="canvas8" />
-                                <Binding ElementName="canvas9" />
-                                <Binding ElementName="canvas0" />
-                            </MultiBinding>
-                        </Button.CommandParameter>
+    <materialDesign:DialogHost IsOpen="{Binding ProgressViewModel.Load}">
+        <!-- всплывающие окно с прогресбаром -->
+        <materialDesign:DialogHost.DialogContent>
+            <StackPanel Margin="16">
+                <TextBlock FontSize="24">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}Создано: {1} из {0}">
+                            <Binding Path="ProgressViewModel.FinishTotalNumbers"></Binding>
+                            <Binding Path="ProgressViewModel.TotalNumber"></Binding>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <ProgressBar Value="{Binding ProgressViewModel.TotalNumber}" FontSize="24"
+                             Minimum="0" Height="5" Margin="0 10 0 0"
+                             Maximum="{Binding ProgressViewModel.FinishTotalNumbers}" 
+                             materialDesign:TransitionAssist.DisableTransitions="True" />
+            </StackPanel>
+        </materialDesign:DialogHost.DialogContent>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.2*" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ScrollViewer Grid.Column="0">
+                <WrapPanel ItemWidth="300" ItemHeight="320">
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas1"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric1CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas2"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric2CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas3"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric3CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas4"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric4CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas5"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric5CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas6"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric6CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas7"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric7CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas8"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric8CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas9"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Numeric9CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                    <StackPanel>
+                        <materialDesign:Card Style="{StaticResource card}">
+                            <Canvas Style="{StaticResource canvas}" Name="canvas0"
+                                MouseLeftButtonDown="DrawingMouseDown" 
+                                MouseLeftButtonUp="DrawingMouseUp" 
+                                MouseMove="DrawingMouseMove">
+                            </Canvas>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon Kind="Number0CircleOutline" Style="{StaticResource num}"  />
+                    </StackPanel>
+                </WrapPanel>
+            </ScrollViewer>
+            <StackPanel Grid.Column="1" Margin="20 0">
+                <controls:SetParametrs />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 25 0 25">
+                    <Button Command="{Binding LoadScenario}" Style="{StaticResource MaterialDesignFlatButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{x:Static res:Resources.btnLoadScenario}" />
+                            <materialDesign:PackIcon Kind="FileUploadOutline" Style="{StaticResource ico}" />
+                        </StackPanel>
                     </Button>
-                </Grid>
-
-            </materialDesign:Card>
-        </StackPanel>
-    </Grid>
+                    <Button Command="{Binding SaveScenario}" Style="{StaticResource MaterialDesignFlatButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{x:Static res:Resources.btnSaveScenario}" />
+                            <materialDesign:PackIcon Kind="ContentSave" Style="{StaticResource ico}" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <Button Command="{Binding Create}" Content="{x:Static res:Resources.btnGenerate}" Style="{StaticResource MaterialDesignFlatButton}" Margin="25 0 25 25">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource customConverter}">
+                            <Binding ElementName="canvas1" />
+                            <Binding ElementName="canvas2" />
+                            <Binding ElementName="canvas3" />
+                            <Binding ElementName="canvas4" />
+                            <Binding ElementName="canvas5" />
+                            <Binding ElementName="canvas6" />
+                            <Binding ElementName="canvas7" />
+                            <Binding ElementName="canvas8" />
+                            <Binding ElementName="canvas9" />
+                            <Binding ElementName="canvas0" />
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+                <Button Command="{Binding ClearAll}" Margin="25 0 25 0" Style="{StaticResource MaterialDesignFlatButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Static res:Resources.btnClearCanvas}" />
+                        <materialDesign:PackIcon Kind="DeleteEmptyOutline" Style="{StaticResource ico}" />
+                    </StackPanel>
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource customConverter}">
+                            <Binding ElementName="canvas1" />
+                            <Binding ElementName="canvas2" />
+                            <Binding ElementName="canvas3" />
+                            <Binding ElementName="canvas4" />
+                            <Binding ElementName="canvas5" />
+                            <Binding ElementName="canvas6" />
+                            <Binding ElementName="canvas7" />
+                            <Binding ElementName="canvas8" />
+                            <Binding ElementName="canvas9" />
+                            <Binding ElementName="canvas0" />
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </materialDesign:DialogHost>
 </Window>

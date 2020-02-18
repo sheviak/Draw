@@ -9,12 +9,11 @@ namespace Draw
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-
-            ICollection<Canvas> tuple = new List<Canvas>();
+            ICollection<Canvas> list = new List<Canvas>();
             foreach (var item in values)
-                tuple.Add((Canvas)item);
+                list.Add((Canvas)item);
 
-            return tuple;
+            return list;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

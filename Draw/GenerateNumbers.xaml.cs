@@ -17,6 +17,12 @@ namespace Draw
         public GenerateNumbers()
         {
             InitializeComponent();
+            this.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
+        }
+
+        void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
         }
 
         void DrawingMouseDown(object sender, MouseButtonEventArgs e)

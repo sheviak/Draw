@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:res="clr-namespace:Draw.Properties"
              mc:Ignorable="d">
     
     <UserControl.Resources>
@@ -37,20 +38,25 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <!-- Лейблы -->
-        <TextBlock Grid.Row="0" Text="Цифра" Style="{StaticResource textblockFunck}" />
-        <TextBlock Grid.Row="1" Text="Угол поворота" Style="{StaticResource textblockFunck}" />
-        <TextBlock Grid.Row="2" Text="Сдвиг по оси Х (px)" Style="{StaticResource textblockFunck}" />
-        <TextBlock Grid.Row="3" Text="Сдвиг по оси У (px)" Style="{StaticResource textblockFunck}" />
-        <TextBlock Grid.Row="4" Text="Масштабирование по оси Х" Style="{StaticResource textblockFunck}" />
-        <TextBlock Grid.Row="5" Text="Масштабирование по оси У" Style="{StaticResource textblockFunck}" />
+        <TextBlock Grid.Row="0" Text="{x:Static res:Resources.num}" Style="{StaticResource textblockFunck}" />
+        <TextBlock Grid.Row="1" Text="{x:Static res:Resources.rotate}" Style="{StaticResource textblockFunck}" />
+        <TextBlock Grid.Row="2" Text="{x:Static res:Resources.shiftX}" Style="{StaticResource textblockFunck}" />
+        <TextBlock Grid.Row="3" Text="{x:Static res:Resources.shiftY}" Style="{StaticResource textblockFunck}" />
+        <TextBlock Grid.Row="4" Text="{x:Static res:Resources.scaleX}" Style="{StaticResource textblockFunck}" />
+        <TextBlock Grid.Row="5" Text="{x:Static res:Resources.scaleY}" Style="{StaticResource textblockFunck}" />
+        <TextBlock Grid.Row="6" Text="{x:Static res:Resources.skewX}" Style="{StaticResource textblockFunck}" />
+        <TextBlock Grid.Row="7" Text="{x:Static res:Resources.skewY}" Style="{StaticResource textblockFunck}" />
         <!-- Текстовые поля-->
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding NumberList}" SelectedIndex="{Binding Number}" />
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding NumberList}" SelectedValue="{Binding SelectedNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Rotate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ShiftX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ShiftY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ScaleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding ScaleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding SkewX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding SkewY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </UserControl>

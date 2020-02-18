@@ -42,13 +42,13 @@ namespace Draw
         void StartFigure(Point start)
         {
             currentFigure = new PathFigure() { StartPoint = start };
-            var currentPath =
-                new System.Windows.Shapes.Path()
-                {
-                    Stroke = Brushes.Black,
-                    StrokeThickness = 10,
-                    Data = new PathGeometry() { Figures = { currentFigure } }
-                };
+            var currentPath = new System.Windows.Shapes.Path()
+            {
+                Stroke = Brushes.Black,
+                StrokeThickness = 10,
+                Data = new PathGeometry() { Figures = { currentFigure } }
+            };
+
             canvas.Children.Add(currentPath);
         }
 

@@ -5,18 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:ii="http://schemas.microsoft.com/expression/2010/interactivity" 
-        xmlns:local="clr-namespace:Draw"
         xmlns:controls="clr-namespace:Draw.UserControls"
         xmlns:viewmodel="clr-namespace:Draw.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Title="Sheviak | Numbers" Height="500" Width="1010" ResizeMode="CanMinimize"
         FontSize="16">
-    
+
     <Window.DataContext>
         <viewmodel:MainWindowViewModel />
     </Window.DataContext>
-    
+
     <Window.Resources>
         <Style x:Key="textblock" TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignHeadlineTextBlock}">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -27,27 +26,55 @@
             <Setter Property="FontWeight" Value="Normal" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
         </Style>
-        <Style x:Key="button" TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedDarkButton}">
+        <Style x:Key="button" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}" >
             <Setter Property="Margin" Value="10 0" />
             <Setter Property="Height" Value="40" />
             <Setter Property="FontSize" Value="16" />
-            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="15" />
         </Style>
     </Window.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
             <RowDefinition Height="40" />
             <RowDefinition MinHeight="320" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="330" />
-            <ColumnDefinition />
+            <ColumnDefinition MinWidth="330" />
             <ColumnDefinition MinWidth="330" />
         </Grid.ColumnDefinitions>
-        
+
+        <Menu Grid.Row="0" Grid.ColumnSpan="3" IsMainMenu="True" Background="White">
+            <MenuItem Header="_Файл">
+                <MenuItem Header="Генератор" Command="{Binding GenerateWindow}">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="AlphabetGCircleOutline" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Сохранить в БД" Command="{Binding SaveDbCommand}">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ContentSave" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Выйти" Command="{Binding CloseProgram}">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ExitToApp" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_О авторе">
+                <MenuItem Header="_Сайт" Command="{Binding OpenWebSite}">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Web" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Поле" Style="{StaticResource textblock}" />
         <TextBlock Grid.Row="1" Grid.Column="1" Text="Функции" Style="{StaticResource textblock}" />
         <TextBlock Grid.Row="1" Grid.Column="2" Text="Изображение" Style="{StaticResource textblock}" />
@@ -63,42 +90,10 @@
             </Canvas>
         </materialDesign:Card>
 
-        <controls:Functions x:Name="mSNC" Grid.Row="2" Grid.Column="1"></controls:Functions>
-       <!--
-        <materialDesign:Card Grid.Row="2" Grid.Column="1" materialDesign:ShadowAssist.ShadowDepth="Depth2"
-                             Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Grid Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3.5*" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
-
-                <TextBlock Grid.Row="0" Text="Цифра" Style="{StaticResource textblockFunck}" />
-                <TextBlock Grid.Row="1" Text="Угол поворота" Style="{StaticResource textblockFunck}" />
-                <TextBlock Grid.Row="2" Text="Сдвиг по оси Х (px)" Style="{StaticResource textblockFunck}" />
-                <TextBlock Grid.Row="3" Text="Сдвиг по оси У (px)" Style="{StaticResource textblockFunck}" />
-                <TextBlock Grid.Row="4" Text="Масштабирование по оси Х" Style="{StaticResource textblockFunck}" />
-                <TextBlock Grid.Row="5" Text="Масштабирование по оси У" Style="{StaticResource textblockFunck}" />
-
-                <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding NumberList}" SelectedIndex="{Binding Number}" />
-                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Rotate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ShiftX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ShiftY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding ScaleX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding ScaleY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-            </Grid>    
-        </materialDesign:Card>
--->
+        <ScrollViewer Grid.Row="2" Grid.Column="1">
+            <controls:Functions></controls:Functions>
+        </ScrollViewer>
+        
         <materialDesign:Card Grid.Row="2" Grid.Column="2" materialDesign:ShadowAssist.ShadowDepth="Depth2" 
                              Width="300" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Image Source="{Binding BitmapSource}" Width="300" Height="300"></Image>
@@ -113,8 +108,12 @@
         </Button>
 
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Center">
-            <Button Content="Загрузит CSV" Command="{Binding LoadCommand}" Style="{StaticResource button}" />
-            <Button Content="Создать" Style="{StaticResource button}">
+            <Button Content="Загрузить CSV" Style="{StaticResource button}" Command="{Binding LoadCommand}" />
+            <Button Style="{StaticResource button}">
+                <StackPanel Orientation="Horizontal">                
+                    <TextBlock Text="Создать" />
+                    <materialDesign:PackIcon Kind="Create" Margin="10 0 0 0" Height="24" Width="24" />
+                </StackPanel>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding CreateCommand}" CommandParameter="{Binding ElementName=canvas}"/>
